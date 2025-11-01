@@ -105,7 +105,7 @@ The training scripts generate several diagnostic images and charts, which are cr
 
 **Key Findings:**
 - The `rock-ppr-scissors.ipynb` notebook correctly conducts a valid and fair comparison.
-- The experimental results demonstrate a clear and measurable performance advantage for the YOLOv8n architecture based on a 25-epoch training run.
+- The experimental results demonstrate a clear and measurable performance advantage for the YOLOv8n architecture based on a 5-epoch training run.
 
 **Quantitative Victory:**  
 YOLOv8n outperformed YOLOv5s in all significant metrics:
