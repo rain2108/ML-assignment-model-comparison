@@ -5,39 +5,27 @@
 ## 🧾 Short Description
 In this project, we put two top-tier, real-time object detection models—YOLOv5s and YOLOv8n—head-to-head to see which was better for a specific, fun task: recognizing "rock," "paper," and "scissors" hand gestures.
 
-But we didn't just want to compare performance scores. We decided to look under the hood at the models themselves, exploring the key design changes from YOLOv5's older, anchor-based system to the more modern, anchor-free approach used in YOLOv8.
+However, we wanted to examine more than just performance evaluations. We decided to examine the models themselves in order to comprehend the transition from the more traditional anchor-based system of YOLOv5 to the more recent anchor-free system of YOLOv8.
 
-To keep the comparison fair, we trained both models on the exact same dataset (Roboflow's "RPS SXSW") for the same amount of time (5 rounds). The results, looking at both the hard numbers and how they performed in practice, were clear: the architectural upgrades in YOLOv8n lead to significant and measurable improvements in accuracy and performance.
+To ensure a fair comparison, we trained both models for the same duration (5 rounds) and with the same dataset (Roboflow's "RPS SXSW"). The findings were evident from both the quantitative data and their practical use: YOLOv8n's architectural modifications significantly improved accuracy and performance.
 
-What’s truly impressive is that even the tiny "nano" version of YOLOv8 managed to outperform the larger "small" version of its predecessor.
+It is simply amazing that even the minuscule "nano" version of YOLOv8 outperformed the larger "small" version of its predecessor.
 
 ---
 
 ## 📂 Dataset Source
 
 **Dataset:**  
-The project utilizes the "Rock, Paper, Scissors SXSW" dataset (Version 1) sourced from Roboflow Universe.
-
-- **Link:** [https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw](https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw)
-- **Volume:** The dataset consists of 3,129 images, split into training, validation, and test sets.
+- **Link:** [https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw](https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw)  
+- **Volume:** The dataset consists of 3,129 images, split into training, validation, and test sets.  
 - **Classes:** 3 (rock, paper, scissors)
-
-**Preprocessing and Formatting:**
-
-Using the Roboflow platform to guarantee data integrity was a crucial methodological step, as the notebook illustrates. Two downloads of the identical dataset (Version 1) were made, but in two distinct formats that the models required:
-
-1. **YOLOv8:** The dataset was used to download it. `download("yolov8")` command, which offers data and a directory structure. YAML file that has been tailored for the Ultralytics package.  
-2. **YOLOv5:** The dataset was used to download YOLOv5. The "YOLOv5 PyTorch" format is provided by the `download("yolov5")` command.
-
-For a true "apples-to-apples" comparison, this step is crucial because it removes dataset formatting as a variable, guaranteeing that both models train on the same images and that validation splits.
 
 ---
 
 ## ⚙️ Methods
 
 ### A. Approach: Controlled Experiment
-
-`yolov8n.pt` (the nano variant) and `yolov5s.pt` (the small variant) are directly compared as part of the core methodology. This method works well for quickly figuring out how two closely related, cutting-edge architectures differ in terms of performance.
+The core methodology includes a direct comparison between `yolov8n.pt` (the nano variant) and `yolov5s.pt` (the small variant). This technique is useful for rapidly determining how two closely related, state-of-the-art architectures differ in terms of performance.
 
 **Controlled Variables (Hyperparameters):**
 - Dataset: Identical (Roboflow Version 1)
@@ -49,7 +37,6 @@ For a true "apples-to-apples" comparison, this step is crucial because it remove
 ---
 
 ### B. YOLOv5s vs. YOLOv8n: Core Architectural Differences
-
 The primary difference between the two "ML models" lies in their fundamental neural network architecture. YOLOv8 is not just an increment; it is a significant re-design.
 
 | Component | YOLOv5s (Small) | YOLOv8n (Nano) |
@@ -62,23 +49,23 @@ The primary difference between the two "ML models" lies in their fundamental neu
 ---
 
 ### 🔍 Key Technical Details
+1. **Backbone (C3 vs. C2f):**  
+   - **C3 (YOLOv5):** A feature map is split by a C3 module, which then processes one half using a sequence of "Bottleneck" convolutions before concatenating it with the other, unprocessed half.  
+   - **C2f (YOLOv8):** This evolution is more intricate. The feature map is also divided, but all intermediate outputs from its bottleneck series are sent for final concatenation. This offers richer feature information and a more comprehensive "path" for gradients.
 
-#### 1. Backbone (C3 vs. C2f)
-- **C3 (YOLOv5):** A feature map is split by a C3 module, which then processes one half using a sequence of "Bottleneck" convolutions before concatenating it with the other, unprocessed half.  
-- **C2f (YOLOv8):** This evolution is more intricate. The feature map is also divided, but all intermediate outputs from its bottleneck series are sent for final concatenation. This offers richer feature information and a more comprehensive "path" for gradients.
+2. **Head (Coupled vs. Decoupled):**  
+   - **YOLOv5 (Coupled):** The bounding box coordinates, the class (rock, paper, scissor), and the "objectness" (is there an object here?) are all predicted by a single set of convolutional layers. This could lead to conflict.  
+   - **YOLOv8 (Decoupled):** The classification and regression parts of the model are distinct, thin sub-networks, or "heads." This reduces task conflict and increases accuracy.
 
-#### 2. Head (Coupled vs. Decoupled)
-- **YOLOv5 (Coupled):** The class, objectness, and bounding box coordinates are all predicted by a single set of convolutional layers, which may cause task conflicts.  
-- **YOLOv8 (Decoupled):** The classification and regression components are distinct sub-networks. One focuses on “what is this?” while the other focuses on “where is this?”, improving accuracy.
+3. **Head (Anchor-Based vs. Anchor-Free):**  
+   - **YOLOv5:** Uses pre-existing anchor boxes (priors).  
+   - **YOLOv8:** Predicts object center `(x, y)` and `(width, height)` directly — easier to train and generalizes better to irregular shapes.
 
-#### 3. Head (Anchor-Based vs. Anchor-Free)
-- **YOLOv5 (Anchor-Based):** Uses pre-defined anchor boxes (priors) of different sizes and shapes.  
-- **YOLOv8 (Anchor-Free):** Predicts width, height, and center directly, improving generalization to irregular objects.
+4. **Loss Function (Objectness vs. DFL):**  
+   - **YOLOv5:** Uses objectness loss to teach the model when an anchor box contains an object.  
+   - **YOLOv8:** Adds Distribution Focal Loss (DFL) for bounding box regression, learning probability distributions around box coordinates for stable, accurate box learning.
 
-#### 4. Loss Function (Objectness vs. DFL)
-- **YOLOv5:** Uses “objectness” loss to learn confidence about anchor boxes containing objects.  
-- **YOLOv8:** Removes objectness loss and adds **Distribution Focal Loss (DFL)** for bounding box regression, learning probability distributions around box coordinates for stability and precision.
-
+---
 
 ## 📊 Experiments / Results Summary
 
@@ -91,42 +78,56 @@ The primary difference between the two "ML models" lies in their fundamental neu
 
 **Analysis & Interpretation:**
 
-The quantitative results show a clear victory for YOLOv8n, which outperforms YOLOv5s in all three primary metrics.
-
-- The higher **mAP (0.512 vs. 0.498)** results from architectural enhancements such as the decoupled head and DFL loss.  
-- The greater **Precision (0.885 vs. 0.852)** shows YOLOv8n makes accurate predictions more often.  
-- The improved **Recall (0.791 vs. 0.782)** shows it detects more objects due to the richer C2f feature representation.
+- The higher **mAP (0.512 vs. 0.498)** is directly attributable to YOLOv8’s enhanced architecture and independent optimization of classification and regression tasks.  
+- The higher **Precision (0.885 vs. 0.852)** indicates that YOLOv8n makes correct predictions more often.  
+- The higher **Recall (0.791 vs. 0.782)** reflects better detection capability due to the richer C2f feature representation.
 
 ---
 
 ### B. Visual & Qualitative Analysis
 
-The training scripts generate several diagnostic images and charts:
-1. `results.png` – Training & Loss Curves  
-2. `confusion_matrix.png` – Confusion Matrix  
-3. `PR_curve.png` – Precision-Recall Curve  
-4. `train_batch0.jpg` (etc.) – Training Data Batches
+The training scripts generate several diagnostic images and charts, which are crucial for a technical analysis.
+
+#### 1. Training & Loss Curves (`results.png`)
+| YOLOv8n | YOLOv5s |
+|:--:|:--:|
+| ![YOLOv8 Training & Loss Curves](results_yolov8.png) | ![YOLOv5 Training & Loss Curves](results_yolov5.png) |
+
+#### 2. Confusion Matrix (`confusion_matrix.png`)
+| YOLOv8n | YOLOv5s |
+|:--:|:--:|
+| ![YOLOv8 Confusion Matrix](confusion_matrix_yolov8.png) | ![YOLOv5 Confusion Matrix](confusion_matrix_yolov5.png) |
+
+#### 3. Precision-Recall Curve (`PR_curve.png`)
+| YOLOv8n | YOLOv5s |
+|:--:|:--:|
+| ![YOLOv8 PR Curve](PR_curve_yolov8.png) | ![YOLOv5 PR Curve](PR_curve_yolov5.png) |
+
+#### 4. Training Data Batches (`train_batch0.jpg`, etc.)
+| YOLOv8n | YOLOv5s |
+|:--:|:--:|
+| ![YOLOv8 Training Batch](train_batch_yolov8.jpg) | ![YOLOv5 Training Batch](train_batch_yolov5.jpg) |
+
+> 🖼️ *Replace these image filenames with the actual output images from your training folders before committing.*
 
 ---
 
 ## 🧠 Conclusion
 
 **Key Findings:**
+- The `rock-ppr-scissors.ipynb` notebook correctly conducts a valid and fair comparison.  
+- **YOLOv8n** outperformed **YOLOv5s** in all significant metrics:  
+  - mAP (0.512 vs. 0.498)  
+  - Precision (0.885 vs. 0.852)  
+  - Recall (0.791 vs. 0.782)
 
-This technical analysis confirms that the `rock-ppr-scissors.ipynb` notebook correctly executes a fair and valid comparison. The experimental results demonstrate a measurable performance advantage for YOLOv8n.
+**Superiority in Architecture:**
+1. The Decoupled Head reduces task conflict.  
+2. The Anchor-Free design provides more flexibility.  
+3. The C2f Module allows for richer feature fusion.  
+4. The DFL Loss provides a more advanced mechanism for bounding box regression.
 
-- **Quantitative Victory:** YOLOv8n outperformed YOLOv5s across all primary metrics  
-  - mAP (0.512 vs 0.498)  
-  - Precision (0.885 vs 0.852)  
-  - Recall (0.791 vs 0.782)
-
-- **Architectural Superiority:**  
-  1. Decoupled Head reduces task conflict  
-  2. Anchor-Free design provides flexibility  
-  3. C2f Module improves feature fusion  
-  4. DFL Loss enhances bounding box regression
-
-This project demonstrates that even the smallest "nano" variant of the YOLOv8 architecture is more powerful and efficient than the "small" variant of its predecessor, validating the design choices made by its creators.
+By demonstrating that even the tiniest "nano" version of the new YOLOv8 architecture is more powerful and efficient than the "small" version of its highly optimized predecessor, this project validates the design choices made by its creators.
 
 ---
 
