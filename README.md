@@ -91,7 +91,7 @@ The training scripts generate several diagnostic images and charts, which are cr
 #### 1. Training & Loss Curves (`results.png`)
 | YOLOv8n | YOLOv5s |
 |:--:|:--:|
-| ![YOLOv8 Training & Loss Curves](results_yolov8.png) | ![YOLOv5 Training & Loss Curves](results_yolov5.png) |
+| ![YOLOv8 Training & Loss Curves](yolov5_results/content/yolov5/runs/train/exp/results.png) | ![YOLOv5 Training & Loss Curves](yolov5_results/content/yolov5/runs/train/exp/results.png) |
 
 #### 2. Confusion Matrix (`confusion_matrix.png`)
 | YOLOv8n | YOLOv5s |
