@@ -79,32 +79,6 @@ The primary difference between the two "ML models" lies in their fundamental neu
 - **YOLOv5:** Uses “objectness” loss to learn confidence about anchor boxes containing objects.  
 - **YOLOv8:** Removes objectness loss and adds **Distribution Focal Loss (DFL)** for bounding box regression, learning probability distributions around box coordinates for stability and precision.
 
----
-
-## 🚀 Steps to Run the Code
-
-The notebook `rock-ppr-scissors.ipynb` follows a clear, sequential execution flow:
-
-1. **Environment Setup:**  
-   Install `ultralytics` (for YOLOv8), `roboflow` (for data download), and clone the YOLOv5 repository.
-
-2. **YOLOv8 Training:**  
-   - Download dataset in YOLOv8 format  
-   - Run `!yolo task=detect mode=train ...`  
-   - Train for 25 epochs and results are saved to `/content/runs/detect/train/`
-
-3. **YOLOv5 Training:**  
-   - Change directory to `/content/yolov5/`  
-   - Install requirements (`!pip install -r requirements.txt`)  
-   - Download dataset in YOLOv5 format  
-   - Run `!python train.py ...` for 25 epochs and results are saved to `/content/yolov5/runs/train/exp/`
-
-4. **Analysis:**  
-   - Generate a pandas DataFrame for metric comparison  
-   - Run inference on a test image (`my_test_image.jpg`) using both models  
-   - Display all generated charts
-
----
 
 ## 📊 Experiments / Results Summary
 
