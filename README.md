@@ -91,22 +91,22 @@ The training scripts generate several diagnostic images and charts, which are cr
 #### 1. Training & Loss Curves (`results.png`)
 | YOLOv8n | YOLOv5s |
 |:--:|:--:|
-| ![YOLOv8 Training & Loss Curves](yolov5_results/content/yolov5/runs/train/exp/results.png) | ![YOLOv5 Training & Loss Curves](yolov5_results/content/yolov5/runs/train/exp/results.png) |
+| ![YOLOv8 Training & Loss Curves](yolov8_results/content/runs/detect/train/results.png) | ![YOLOv5 Training & Loss Curves](yolov5_results/content/yolov5/runs/train/exp/results.png) |
 
 #### 2. Confusion Matrix (`confusion_matrix.png`)
 | YOLOv8n | YOLOv5s |
 |:--:|:--:|
-| ![YOLOv8 Confusion Matrix](confusion_matrix_yolov8.png) | ![YOLOv5 Confusion Matrix](confusion_matrix_yolov5.png) |
+| ![YOLOv8 Confusion Matrix](yolov8_results/content/runs/detect/train/confusion_matrix.png) | ![YOLOv5 Confusion Matrix](yolov5_results/content/yolov5/runs/train/exp/confusion_matrix.png) |
 
 #### 3. Precision-Recall Curve (`PR_curve.png`)
 | YOLOv8n | YOLOv5s |
 |:--:|:--:|
-| ![YOLOv8 PR Curve](PR_curve_yolov8.png) | ![YOLOv5 PR Curve](PR_curve_yolov5.png) |
+| ![YOLOv8 PR Curve](yolov8_results/content/runs/detect/train/PR_curve.png) | ![YOLOv5 PR Curve](yolov5_results/content/yolov5/runs/train/exp/PR_curve.png) |
 
 #### 4. Training Data Batches (`train_batch0.jpg`, etc.)
 | YOLOv8n | YOLOv5s |
 |:--:|:--:|
-| ![YOLOv8 Training Batch](train_batch_yolov8.jpg) | ![YOLOv5 Training Batch](train_batch_yolov5.jpg) |
+| ![YOLOv8 Training Batch](yolov8_results/content/runs/detect/train/train_batch0.jpg) | ![YOLOv5 Training Batch](yolov5_results/content/yolov5/runs/train/exp/train_batch0.jpg) |
 
 > 🖼️ *Replace these image filenames with the actual output images from your training folders before committing.*
 
