@@ -1,6 +1,6 @@
 # ML-assignment-model-comparison
 
-# A Technical Report and Comparative Architectural Analysis of YOLOv8n and YOLOv5s for Real-Time Rock-Paper-Scissors Detection
+# A Technical Report and Comparative Architectural Analysis of YOLOv8n and YOLOv5s for Rock-Paper-Scissors Detection
 
 ## 🧾 Short Description
 In this project, we put two top-tier, real-time object detection models—YOLOv5s and YOLOv8n—head-to-head to see which was better for a specific, fun task: recognizing "rock," "paper," and "scissors" hand gestures.
@@ -107,8 +107,6 @@ The training scripts generate several diagnostic images and charts, which are cr
 | YOLOv8n | YOLOv5s |
 |:--:|:--:|
 | ![YOLOv8 Training Batch](yolov8_results/content/runs/detect/train/train_batch0.jpg) | ![YOLOv5 Training Batch](yolov5_results/content/yolov5/runs/train/exp/train_batch0.jpg) |
-
-> 🖼️ *Replace these image filenames with the actual output images from your training folders before committing.*
 
 ---
 
