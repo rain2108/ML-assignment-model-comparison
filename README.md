@@ -1,6 +1,4 @@
-# ML-assignment-model-comparison
-
-# A Technical Report and Comparative Architectural Analysis of YOLOv8n and YOLOv5s for Rock-Paper-Scissors Detection
+# Technical Report and Comparative Architectural Analysis of YOLOv8n and YOLOv5s for Rock Paper Scissor Detection
 
 ## 🧾 Short Description
 In this project, we put two top-tier, real-time object detection models—YOLOv5s and YOLOv8n—head-to-head to see which was better for a specific, fun task: recognizing "rock," "paper," and "scissors" hand gestures.
@@ -14,10 +12,9 @@ It is simply amazing that even the minuscule "nano" version of YOLOv8 outperform
 ---
 
 ## 📂 Dataset Source
-
-**Dataset:**  
-- **Link:** [https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw](https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw)  
-- **Volume:** The dataset consists of 3,129 images, split into training, validation, and test sets.  
+**Dataset:**
+- **Link:** [https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw](https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw)
+- **Volume:** The dataset consists of 3,129 images, split into training, validation, and test sets.
 - **Classes:** 3 (rock, paper, scissors)
 
 ---
@@ -49,21 +46,13 @@ The primary difference between the two "ML models" lies in their fundamental neu
 ---
 
 ### 🔍 Key Technical Details
-1. **Backbone (C3 vs. C2f):**  
-   - **C3 (YOLOv5):** A feature map is split by a C3 module, which then processes one half using a sequence of "Bottleneck" convolutions before concatenating it with the other, unprocessed half.  
-   - **C2f (YOLOv8):** This evolution is more intricate. The feature map is also divided, but all intermediate outputs from its bottleneck series are sent for final concatenation. This offers richer feature information and a more comprehensive "path" for gradients.
 
-2. **Head (Coupled vs. Decoupled):**  
-   - **YOLOv5 (Coupled):** The bounding box coordinates, the class (rock, paper, scissor), and the "objectness" (is there an object here?) are all predicted by a single set of convolutional layers. This could lead to conflict.  
-   - **YOLOv8 (Decoupled):** The classification and regression parts of the model are distinct, thin sub-networks, or "heads." This reduces task conflict and increases accuracy.
-
-3. **Head (Anchor-Based vs. Anchor-Free):**  
-   - **YOLOv5:** Uses pre-existing anchor boxes (priors).  
-   - **YOLOv8:** Predicts object center `(x, y)` and `(width, height)` directly — easier to train and generalizes better to irregular shapes.
-
-4. **Loss Function (Objectness vs. DFL):**  
-   - **YOLOv5:** Uses objectness loss to teach the model when an anchor box contains an object.  
-   - **YOLOv8:** Adds Distribution Focal Loss (DFL) for bounding box regression, learning probability distributions around box coordinates for stable, accurate box learning.
+| Feature | YOLOv5s (Anchor-Based, Coupled) | YOLOv8n (Anchor-Free, Decoupled) |
+|----------|----------------------------------|-----------------------------------|
+| **Backbone Module** | **C3 (Cross-Stage Partial):** Takes a feature map, splits it, processes one half through "Bottleneck" convolutions, and concatenates it with the unprocessed half. | **C2f (CSP Bottleneck w/ 2 convs):** A more complex evolution that concatenates all intermediate bottleneck outputs, providing richer gradient flow and feature information. |
+| **Detection Head Design** | **Coupled Head:** A single set of layers predicts class, objectness, and box coordinates simultaneously. This can create task conflict. | **Decoupled Head:** Separate, lightweight sub-networks predict classification and bounding box regression independently, reducing conflict and improving accuracy. |
+| **Anchor Mechanism** | **Anchor-Based:** Predicts offsets from pre-defined "anchor boxes" (priors). Restrictive if objects don’t match anchors. | **Anchor-Free:** Directly predicts `(x, y)` center and `(w, h)` of objects, simplifying training and improving generalization. |
+| **Loss Function** | **Includes Objectness Loss:** Uses BCE Loss to teach confidence for object presence. | **Drops Objectness, Adds DFL:** Uses Distribution Focal Loss for more stable and accurate box regression. |
 
 ---
 
@@ -78,9 +67,11 @@ The primary difference between the two "ML models" lies in their fundamental neu
 
 **Analysis & Interpretation:**
 
-- The higher **mAP (0.512 vs. 0.498)** is directly attributable to YOLOv8’s enhanced architecture and independent optimization of classification and regression tasks.  
-- The higher **Precision (0.885 vs. 0.852)** indicates that YOLOv8n makes correct predictions more often.  
-- The higher **Recall (0.791 vs. 0.782)** reflects better detection capability due to the richer C2f feature representation.
+| Metric | YOLOv8n (Winner) | YOLOv5s | Architectural Reason for YOLOv8’s Superiority |
+|---------|------------------|----------|----------------------------------------------|
+| **mAP (50–95)** | 0.512 | 0.498 | The anchor-free design and DFL loss allow for more accurate bounding box regression. The decoupled head optimizes classification and regression tasks independently without conflict. |
+| **Precision** | 0.885 | 0.852 | The decoupled classification head focuses only on class identification, reducing the likelihood of errors. |
+| **Recall** | 0.791 | 0.782 | The C2f module provides a richer feature representation, enabling better object identification. |
 
 ---
 
@@ -113,17 +104,20 @@ The training scripts generate several diagnostic images and charts, which are cr
 ## 🧠 Conclusion
 
 **Key Findings:**
-- The `rock-ppr-scissors.ipynb` notebook correctly conducts a valid and fair comparison.  
-- **YOLOv8n** outperformed **YOLOv5s** in all significant metrics:  
-  - mAP (0.512 vs. 0.498)  
-  - Precision (0.885 vs. 0.852)  
-  - Recall (0.791 vs. 0.782)
+- The `rock-ppr-scissors.ipynb` notebook correctly conducts a valid and fair comparison.
+- The experimental results demonstrate a clear and measurable performance advantage for the YOLOv8n architecture based on a 25-epoch training run.
+
+**Quantitative Victory:**  
+YOLOv8n outperformed YOLOv5s in all significant metrics:
+- mAP (0.512 vs. 0.498)  
+- Precision (0.885 vs. 0.852)  
+- Recall (0.791 vs. 0.782)
 
 **Superiority in Architecture:**
 1. The Decoupled Head reduces task conflict.  
 2. The Anchor-Free design provides more flexibility.  
 3. The C2f Module allows for richer feature fusion.  
-4. The DFL Loss provides a more advanced mechanism for bounding box regression.
+4. The DFL Loss provides a more advanced mechanism for regressing bounding boxes.  
 
 By demonstrating that even the tiniest "nano" version of the new YOLOv8 architecture is more powerful and efficient than the "small" version of its highly optimized predecessor, this project validates the design choices made by its creators.
 
